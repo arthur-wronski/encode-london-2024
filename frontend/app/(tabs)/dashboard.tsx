@@ -1,11 +1,51 @@
-// app/(tabs)/dashboard.tsx
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, StyleSheet, ScrollView, TouchableOpacity, Image} from 'react-native';
+import { supabase } from '../../lib/supabase';
+import axios from 'axios'; // Add this import
 import Logo from '../../assets/images/logo2.png';
+import { useRouter } from 'expo-router';
 
 export default function Dashboard() {
+  const [balance, setBalance] = useState<string>('Loading...');
   const router = useRouter();
+  
+  useEffect(() => {
+    fetchBalance();
+  }, []);
+
+  const fetchBalance = async () => {
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // First get the user's public key from stellar_wallets
+      const { data: walletData, error: walletError } = await supabase
+        .from('stellar_wallets')
+        .select('public_key')
+        .eq('user_id', user.id)
+        .single();
+
+      if (walletError) throw walletError;
+      if (!walletData) throw new Error('No wallet found');
+
+      // Fetch account details using axios
+      const response = await axios.get(
+        `https://horizon-testnet.stellar.org/accounts/${walletData.public_key}`,
+        {
+          headers: { 'Accept': 'application/json' }
+        }
+      );
+
+      // Find XLM balance in the balances array
+      const xlmBalance = response.data.balances.find((b: any) => b.asset_type === 'native');
+      setBalance(xlmBalance ? `${parseFloat(xlmBalance.balance).toFixed(2)} XLM` : '0 XLM');
+
+    } catch (error) {
+      console.error('Error fetching balance:', error);
+      setBalance('Error loading balance');
+    }
+  };
 
   return (
     <View style={styles.container}>

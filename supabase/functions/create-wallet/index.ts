@@ -6,10 +6,22 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { createClient } from '@supabase/supabase-js'
 import StellarSdk from 'stellar-sdk';
+import { cors } from "https://deno.land/x/cors/mod.ts";
 
 console.log("Creating Stellar wallet function initialized")
 
+// Add CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*', // In production, replace * with your actual domain
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+// Handle OPTIONS request for CORS
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   try {
     // Parse the request body to get userId
     const { userId } = await req.json();
@@ -62,7 +74,7 @@ Deno.serve(async (req) => {
         publicKey: pair.publicKey(),
         balances: account.balances,
       }),
-      { headers: { "Content-Type": "application/json" } },
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -70,13 +82,7 @@ Deno.serve(async (req) => {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     return new Response(
       JSON.stringify({ error: errorMessage }),
-      { 
-        status: 500,
-        headers: { 
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        } 
-      },
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
     );
   }
 })
