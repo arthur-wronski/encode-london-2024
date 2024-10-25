@@ -1,7 +1,8 @@
 // app/(tabs)/login.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import Logo from '../../assets/images/logo2.png';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -16,6 +17,8 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Adjust the style for the logo */}
+      <Image source={Logo} style={styles.logo} />
       <Text style={styles.title}>Welcome to Cresco!</Text>
       <Text style={styles.subtitle}>Please log in to continue</Text>
 
@@ -53,6 +56,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#E3F6E8', // Light green background
+  },
+  logo: {
+    width: 100, // Set width for logo
+    height: 100, // Set height for logo
+    marginBottom: 20, // Space below the logo
   },
   title: {
     fontSize: 32,
