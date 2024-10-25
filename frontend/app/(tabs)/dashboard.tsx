@@ -1,7 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { supabase } from '../../lib/supabase';
+import axios from 'axios'; // Add this import
 
 export default function Dashboard() {
+  const [balance, setBalance] = useState<string>('Loading...');
+  
+  useEffect(() => {
+    fetchBalance();
+  }, []);
+
+  const fetchBalance = async () => {
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // First get the user's public key from stellar_wallets
+      const { data: walletData, error: walletError } = await supabase
+        .from('stellar_wallets')
+        .select('public_key')
+        .eq('user_id', user.id)
+        .single();
+
+      if (walletError) throw walletError;
+      if (!walletData) throw new Error('No wallet found');
+
+      // Fetch account details using axios
+      const response = await axios.get(
+        `https://horizon-testnet.stellar.org/accounts/${walletData.public_key}`,
+        {
+          headers: { 'Accept': 'application/json' }
+        }
+      );
+
+      // Find XLM balance in the balances array
+      const xlmBalance = response.data.balances.find((b: any) => b.asset_type === 'native');
+      setBalance(xlmBalance ? `${parseFloat(xlmBalance.balance).toFixed(2)} XLM` : '0 XLM');
+
+    } catch (error) {
+      console.error('Error fetching balance:', error);
+      setBalance('Error loading balance');
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -12,7 +54,7 @@ export default function Dashboard() {
       {/* Balance Card */}
       <View style={styles.balanceCard}>
         <Text style={styles.balanceLabel}>XLM Balance</Text>
-        <Text style={styles.balance}>120.50 XLM</Text>
+        <Text style={styles.balance}>{balance}</Text>
         <Text style={styles.subBalance}>Mobile Money Balance: 100 USD</Text>
       </View>
 
