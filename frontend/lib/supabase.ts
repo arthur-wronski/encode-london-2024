@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-const supabaseUrl = 'https://tbxypxkqpidvxbbvrbiz.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRieHlweGtxcGlkdnhiYnZyYml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk4ODU2NTgsImV4cCI6MjA0NTQ2MTY1OH0.BsI1stJHB8Xe07VHpPsDZGcAf5jv0Y02Np3HGV_Gq_g';
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 // Only include auth configuration if not server-side rendering
 const authConfig = Platform.OS === 'web' && typeof window === 'undefined' 
@@ -17,6 +17,9 @@ const authConfig = Platform.OS === 'web' && typeof window === 'undefined'
         detectSessionInUrl: false,
       },
     };
+
+console.log('supabaseUrl', supabaseUrl);
+console.log('supabaseAnonKey', supabaseAnonKey);
 
 export const supabase = createClient(
   supabaseUrl, 
