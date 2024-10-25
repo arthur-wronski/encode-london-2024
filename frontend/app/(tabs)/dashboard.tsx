@@ -1,3 +1,4 @@
+// app/(tabs)/dashboard.tsx
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -28,12 +29,10 @@ export default function Dashboard() {
           <TouchableOpacity style={styles.actionButton} onPress={() => console.log('Navigate to Pay')}>
             <Text style={styles.actionText}>Pay</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={() => console.log('Navigate to Earn')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('earn')}>
             <Text style={styles.actionText}>Earn</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={() => console.log('Navigate to Withdraw')}>
-            <Text style={styles.actionText}>Withdraw</Text>
-          </TouchableOpacity>
+          {/* Removed Withdraw button */}
         </View>
 
         {/* Recent Transactions */}
@@ -66,6 +65,7 @@ export default function Dashboard() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FAFAFA' },
