@@ -1,11 +1,14 @@
 # Encode London 2024 Project
 
-Mobile money has been enabled people without access to traditional banking to transact in a p2p manner. 
-However, there are some flaws...
-It is very siloed, with no access the the benefits that lay outside of the mobile money ecosystem.
-Cresco allows people who rely on mobile money to seamlessly plug-and-play with the Stellar dApp ecosystem, giving them access to staking protocols and more. 
+## What is Cresco?
+Mobile money has empowered those without traditional banking to transact peer-to-peer—but it’s limited.
 
-It is a full-stack decentralized application built with Expo (React Native), Supabase, and Stellar blockchain. This project allows users without traditional banking access to interact with blockchain services using Mobile Money. 
+It operates in silos, cut off from the broader financial benefits beyond its ecosystem.
+
+Cresco changes the game, letting mobile money users tap directly into the Stellar dApp ecosystem for seamless access to staking protocols and beyond.
+
+## How was Cresco Built?
+Under the hood, CrescoIt is a full-stack decentralized application built with Expo (React Native), Supabase, and Stellar blockchain. This project allows users without traditional banking access to interact with blockchain services using Mobile Money. 
 
 Users can seamlessly stake their mobile money in XLM without needing to hold or manage crypto assets themselves. With just a few taps, they can start earning rewards while we handle all the complex blockchain interactions in the background. Designed to bring Web3 to everyday Web2 users, this app is the bridge that makes decentralized finance (DeFi) accessible to anyone, even without prior crypto experience. Future updates will unlock a full suite of dApps and DeFi services, all through a simple, mobile-first interface—empowering users to stake, lend, borrow, and more directly from their mobile phones.
 
