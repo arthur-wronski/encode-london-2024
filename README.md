@@ -1,6 +1,8 @@
 # Encode London 2024 Project
 
-A full-stack decentralized application built with Expo (React Native), Supabase, and Stellar blockchain integration. This project demonstrates a modern mobile-first approach to blockchain interactions, supporting iOS, Android, and Web platforms.
+A full-stack decentralized application built with Expo (React Native), Supabase, and Stellar blockchain. This project allows users without traditional banking access to interact with blockchain services using Mobile Money.
+
+Users can easily stake their funds in XLM and start earning, all without needing a bank account. Looking ahead, the platform will enable users to explore a wide range of decentralized apps (dApps) and DeFi opportunities, unlocking everything from lending and borrowing to token swaps—all through a simple, mobile-first experience. This app bridges the gap between traditional finance and the future of decentralized finance, empowering users to take control of their financial futures.
 
 ## 🌟 Features
 
