@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, ScrollView, TouchableOpacity, Image} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { supabase } from '../../lib/supabase';
-import axios from 'axios'; // Add this import
 import Logo from '../../assets/images/logo2.png';
+import BottomNav from '../../components/BottomNav'; // Make sure the path is correct
 import { useRouter } from 'expo-router';
 
 export default function Dashboard() {
   const [balance, setBalance] = useState<string>('Loading...');
+  const [transactions, setTransactions] = useState<any[]>([]);
   const router = useRouter();
-  
+
   useEffect(() => {
-    fetchBalance();
+    // fetchBalance()
+    fetchTransactions();
   }, []);
 
   const fetchBalance = async () => {
@@ -45,18 +47,25 @@ export default function Dashboard() {
       console.error('Error fetching balance:', error);
       setBalance('Error loading balance');
     }
+  }
+
+  const fetchTransactions = async () => {
+    const fetchedTransactions = [
+      { id: 1, type: 'added', amount: 50, date: '2024-10-25', description: 'Added $50 to Earn' },
+      { id: 2, type: 'withdrawn', amount: 20, date: '2024-10-22', description: 'Withdrew $20 from Earn' },
+      { id: 3, type: 'sent', amount: 15, date: '2024-10-20', description: 'Sent $15 to Alice Smith' },
+    ];
+    setTransactions(fetchedTransactions);
   };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
         <View style={styles.header}>
           <Image source={Logo} style={styles.logo} />
           <Text style={styles.title}>Welcome to Cresco</Text>
         </View>
 
-        {/* Balance Card */}
         <View style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>Balance</Text>
           <Text style={styles.balance}>$120</Text>
@@ -64,48 +73,30 @@ export default function Dashboard() {
           <Text style={styles.subBalance}>Earn: $20 (200 XLM)</Text>
         </View>
 
-        {/* Actions */}
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.actionButton} onPress={() => console.log('Navigate to Pay')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('pay')}>
             <Text style={styles.actionText}>Pay</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton} onPress={() => router.push('earn')}>
             <Text style={styles.actionText}>Earn</Text>
           </TouchableOpacity>
-          {/* Removed Withdraw button */}
         </View>
 
-        {/* Recent Transactions */}
         <View style={styles.transactions}>
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
-          {/* Placeholder transactions */}
-          <View style={styles.transactionItem}>
-            <Text style={styles.transactionText}>Earned 5 XLM</Text>
-            <Text style={styles.transactionDate}>2023-10-22</Text>
-          </View>
-          <View style={styles.transactionItem}>
-            <Text style={styles.transactionText}>Withdrew 10 XLM</Text>
-            <Text style={styles.transactionDate}>2023-10-21</Text>
-          </View>
+          {transactions.map(transaction => (
+            <View key={transaction.id} style={styles.transactionItem}>
+              <Text style={styles.transactionText}>{transaction.description}</Text>
+              <Text style={styles.transactionDate}>{transaction.date}</Text>
+            </View>
+          ))}
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation Bar */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={() => router.replace('dashboard')} style={styles.navButton}>
-          <Text style={styles.navText}>Dashboard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.replace('settings')} style={styles.navButton}>
-          <Text style={styles.navText}>Settings</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.replace('transactions')} style={styles.navButton}>
-          <Text style={styles.navText}>Transactions</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNav activeTab="dashboard" />
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FAFAFA' },
@@ -147,16 +138,6 @@ const styles = StyleSheet.create({
   },
   transactionText: { fontSize: 16, color: '#4CAF50' },
   transactionDate: { fontSize: 12, color: '#757575' },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    backgroundColor: '#E3F6E8',
-    borderTopWidth: 1,
-    borderTopColor: '#A5D6A7',
-  },
-  navButton: { flex: 1, alignItems: 'center' },
-  navText: { color: '#4CAF50', fontWeight: '600' },
   logo: {
     width: 100,
     height: 100,
