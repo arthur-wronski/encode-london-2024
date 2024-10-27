@@ -160,14 +160,26 @@ export default function LoginScreen() {
           throw new Error('No user ID returned from signup');
         }
         
-        // Create wallet and link mobile money account in parallel
-        const [walletData, mobileMoneyLink] = await Promise.all([
-          createWallet(data.user.id),
-          linkMobileMoneyAccount(data.user.id)
-        ]);
-        
-        console.log('Wallet created:', walletData);
-        console.log('Mobile money account linked:', mobileMoneyLink);
+        // Create wallet and attempt to link mobile money account, but don't let mobile money failure stop the process
+        try {
+          const [walletData, mobileMoneyLink] = await Promise.all([
+            createWallet(data.user.id),
+            linkMobileMoneyAccount(data.user.id)
+          ]);
+          console.log('Wallet created:', walletData);
+          console.log('Mobile money account linked:', mobileMoneyLink);
+        } catch (error) {
+          // If mobile money linking fails, log the error but continue
+          console.error('Error during wallet/mobile setup:', error);
+          if (error instanceof Error) {
+            if (error.message.includes('mobile money')) {
+              alert('Account created but mobile money linking failed. You can try linking it again later.');
+            } else if (error.message.includes('wallet')) {
+              // If wallet creation fails, we should still throw the error as it's critical
+              throw error;
+            }
+          }
+        }
         
         router.replace('/dashboard');
       } catch (error: unknown) {
