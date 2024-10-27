@@ -54,6 +54,33 @@ The backend leverages Supabase's ecosystem:
 - **Database**: Secure storage for wallet credentials and user data
 - **Authentication**: Built-in auth system with multiple provider support
 
+### Mobile Money Integration
+
+The application features a robust Mobile Money integration layer that acts as a bridge between traditional mobile payment systems and blockchain functionality. This integration is handled through a dedicated Express proxy server that manages all Mobile Money API interactions.
+
+The proxy server provides two key endpoints:
+- Account Linking: Allows users to connect their mobile money accounts to the application
+- Payment Processing: Facilitates transfers between mobile money accounts
+
+The integration follows a three-step process:
+1. **Account Linking**: Users first link their mobile money account through a secure API handshake
+2. **Transaction Processing**: When users initiate actions, the system processes the mobile money transaction
+3. **Blockchain Integration**: After successful mobile money operations, corresponding blockchain transactions are executed
+
+Security is maintained through:
+- API key management
+- Request signing
+- Correlation IDs for transaction tracking
+- Secure credential storage
+
+The Mobile Money integration supports:
+- Account balance queries
+- Peer-to-peer transfers
+- Transaction status tracking
+- Real-time notifications
+
+This architecture ensures that users can seamlessly interact with blockchain services using their familiar mobile money accounts, without needing to understand the underlying complexity of cryptocurrency transactions.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
