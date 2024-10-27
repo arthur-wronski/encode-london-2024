@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Switch, TextInput } from 'rea
 import Slider from '@react-native-community/slider'; 
 import { useRouter } from 'expo-router';
 import axios from 'axios'; // for price API
+import BottomNav from '../../components/BottomNav';
 
 export default function EarnScreen() {
   const [withdrawAmount, setWithdrawAmount] = useState(0);
@@ -195,6 +196,7 @@ export default function EarnScreen() {
           </TouchableOpacity>
         </View>
       )}
+      <BottomNav activeTab="dashboard" />
     </View>
   );
 }
