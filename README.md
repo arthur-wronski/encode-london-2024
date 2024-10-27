@@ -5,7 +5,7 @@ Mobile money has empowered those without traditional banking to transact peer-to
 
 It operates in silos, cut off from the broader financial benefits beyond its ecosystem.
 
-Cresco changes the game, letting mobile money users tap directly into the Stellar dApp ecosystem for seamless access to staking protocols and beyond.
+Cresco changes the game, letting mobile money users plug-and-play with the entire Stellar dApp ecosystem for seamless access to staking protocols and more.
 
 ## How was Cresco Built?
 Under the hood, CrescoIt is a full-stack decentralized application built with Expo (React Native), Supabase, and Stellar blockchain. This project allows users without traditional banking access to interact with blockchain services using Mobile Money. 
