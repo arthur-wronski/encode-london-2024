@@ -1,17 +1,20 @@
+// app/(tabs)/login.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase.ts'; // You'll need to create this
 import * as StellarSdk from '@stellar/stellar-sdk';
 import axios from 'axios';
-import Logo from '../../assets/images/logo2.png';
+import { AuthError } from '@supabase/supabase-js';
 
 export default function LoginScreen() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [linkingStatus, setLinkingStatus] = useState<'pending' | 'complete' | 'failed' | null>(null);
 
   const createWallet = async (userId: string) => {
     try {
@@ -76,6 +79,41 @@ export default function LoginScreen() {
     }
   };
 
+  const linkMobileMoneyAccount = async (userId: string) => {
+    try {
+      console.log('Linking mobile money account for user:', userId);
+    
+      // Use the proxy server instead of calling the API directly
+      const response = await axios.post('http://localhost:3000/api/mobile-money/link', {
+        mobileNumber,
+        userId
+      });
+
+      // Store the link reference in your database
+      const { data: linkData, error: dbError } = await supabase
+        .from('mobile_money_links')
+        .insert({
+          user_id: userId,
+          mobile_number: mobileNumber,
+          link_reference: response.data.linkReference,
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (dbError) {
+        throw new Error(`Failed to store mobile money link: ${dbError.message}`);
+      }
+
+      setLinkingStatus('complete');
+      return linkData;
+    } catch (error) {
+      console.error('Error linking mobile money account:', error);
+      setLinkingStatus('failed');
+      throw error;
+    }
+  };
+
   const handleAuth = async () => {
     setIsLoading(true);
     if (isLogin) {
@@ -92,7 +130,7 @@ export default function LoginScreen() {
         }
 
         console.log('Login successful:', data.user);
-        router.replace('dashboard');
+        router.replace('/dashboard');
       } catch (error: any) {
         console.error('Login Error:', error);
         alert(error.message || 'An error occurred during login');
@@ -102,6 +140,11 @@ export default function LoginScreen() {
       }
     } else {
       try {
+        // Validate mobile number format
+        if (!mobileNumber.match(/^\+?[1-9]\d{1,14}$/)) {
+          throw new Error('Invalid mobile number format');
+        }
+
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -117,19 +160,25 @@ export default function LoginScreen() {
           throw new Error('No user ID returned from signup');
         }
         
-        // Create wallet directly
-        const walletData = await createWallet(data.user.id);
+        // Create wallet and link mobile money account in parallel
+        const [walletData, mobileMoneyLink] = await Promise.all([
+          createWallet(data.user.id),
+          linkMobileMoneyAccount(data.user.id)
+        ]);
+        
         console.log('Wallet created:', walletData);
+        console.log('Mobile money account linked:', mobileMoneyLink);
         
-        // Only redirect if everything was successful
-        router.replace('dashboard');
-      } catch (error: any) {
+        router.replace('/dashboard');
+      } catch (error: unknown) {
         console.error('Error during signup process:', error);
-        alert(error.message || 'An error occurred during signup');
+        alert(error instanceof Error ? error.message : 'An error occurred during signup');
         
-        // If we have a user but wallet creation failed, we should handle this case
-        if (error.message.includes('wallet')) {
+        if (error instanceof Error && error.message.includes('wallet')) {
           alert('Account created but wallet setup failed. Please try again or contact support.');
+        }
+        if (error instanceof Error && error.message.includes('mobile money')) {
+          alert('Account created but mobile money linking failed. Please try again or contact support.');
         }
       } finally {
         setIsLoading(false);
@@ -139,7 +188,6 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={Logo} style={styles.logo} />
       <Text style={styles.title}>Welcome to Cresco!</Text>
       <Text style={styles.subtitle}>
         {isLogin ? 'Please log in to continue' : 'Create a new account'}
@@ -161,6 +209,16 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         autoCapitalize="none"
       />
+      {!isLogin && (
+        <TextInput
+          style={styles.input}
+          placeholder="Mobile Money Number (e.g., +254123456789)"
+          value={mobileNumber}
+          onChangeText={setMobileNumber}
+          keyboardType="phone-pad"
+          autoCapitalize="none"
+        />
+      )}
 
       <TouchableOpacity
         style={[styles.button, isLoading && styles.buttonDisabled]}
@@ -194,17 +252,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#E3F6E8',
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+    backgroundColor: '#E3F6E8', // Light green background
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: '#4CAF50', // Darker green for title
     marginBottom: 10,
   },
   subtitle: {
@@ -216,20 +269,20 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     borderWidth: 1,
-    borderColor: '#A5D6A7',
+    borderColor: '#A5D6A7', // Light green border
     borderRadius: 10,
     marginBottom: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFFFFF', // White input background
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#4CAF50', // Button color
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     width: '100%',
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#FFFFFF', // White text on button
     fontSize: 18,
     fontWeight: 'bold',
   },

@@ -39,7 +39,8 @@
     "react-native-screens": "3.31.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.10",
-    "stellar-sdk": "^12.3.0"
+    "stellar-sdk": "^12.3.0",
+    "@react-native-community/slider": "4.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
