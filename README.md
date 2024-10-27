@@ -256,6 +256,7 @@ project-root/
     │   ├── send-payment/
     │   └── get-balance/
     └── migrations/       # Database migrations
+```
 
 ### Key Components
 
