@@ -4,6 +4,9 @@ A full-stack decentralized application built with Expo (React Native), Supabase,
 
 Users can seamlessly stake their money in XLM without needing to hold or manage crypto assets themselves. With just a few taps, they can start earning rewards while we handle all the complex blockchain interactions in the background. Designed to bring Web3 to everyday Web2 users, this app is the bridge that makes decentralized finance (DeFi) accessible to anyone, even without prior crypto experience. Future updates will unlock a full suite of dApps and DeFi services, all through a simple, mobile-first interface—empowering users to stake, lend, borrow, and more directly from their mobile phones.
 
+<img width="383" alt="Screenshot 2024-10-27 at 10 49 44" src="https://github.com/user-attachments/assets/fd18d758-9bd3-4937-bc3a-9fc1b78ba623">
+<img width="381" alt="Screenshot 2024-10-27 at 10 50 27" src="https://github.com/user-attachments/assets/a3bd02ac-eaf4-402d-be4d-efd598600930">
+
 ## 🌟 Features
 
 - **Cross-Platform Support**: Built with Expo/React Native for iOS, Android, and Web
