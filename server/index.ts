@@ -80,6 +80,66 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// Add this new endpoint
+app.post('/api/mobile-money/payment', async (req, res) => {
+  try {
+    const { amount, recipientId, recipientNumber, senderId, senderNumber } = req.body;
+
+    if (!amount || !recipientNumber || !senderNumber) {
+      return res.status(400).json({ 
+        error: 'Amount, recipient number, and sender number are required' 
+      });
+    }
+
+    // Make request to Mobile Money API
+    const response = await axios.post(
+      `${MOBILE_MONEY_API.BASE_URL}/transactions/type/transfer`,
+      {
+        amount: {
+          amount,
+          currency: "USD"
+        },
+        debitParty: [{
+          key: "MSISDN",
+          value: senderNumber
+        }],
+        creditParty: [{
+          key: "MSISDN",
+          value: recipientNumber
+        }],
+        type: "transfer",
+        requestDate: new Date().toISOString(),
+        requestingOrganisationTransactionReference: `${senderId}-${Date.now()}`,
+        descriptionText: "Payment transfer"
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': MOBILE_MONEY_API.API_KEY,
+          'Authorization': `Basic ${Buffer.from(
+            `${MOBILE_MONEY_API.CONSUMER_KEY}:${MOBILE_MONEY_API.CONSUMER_SECRET}`
+          ).toString('base64')}`,
+          'X-Date': new Date().toUTCString(),
+          'X-Reference-Id': `${senderId}-${Date.now()}`
+        }
+      }
+    );
+
+    res.json({
+      transactionReference: response.data.transactionReference,
+      status: response.data.status,
+      serverCorrelationId: response.data.serverCorrelationId
+    });
+
+  } catch (error: any) {
+    console.error('Error processing payment:', error.response?.data || error);
+    res.status(500).json({ 
+      error: 'Failed to process payment',
+      details: error.response?.data || (error instanceof Error ? error.message : 'Unknown error')
+    });
+  }
+});
+
 // Start server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
