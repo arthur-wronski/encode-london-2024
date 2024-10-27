@@ -14,7 +14,7 @@ Users can seamlessly stake their mobile money in XLM without needing to hold or 
 
 ## Demo
 
-Check out the live demo [here]((https://streamable.com/zxaank)).
+Check out the live demo [here](https://streamable.com/zxaank).
 
 
 
