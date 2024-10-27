@@ -10,7 +10,9 @@ export default function TabLayout() {
         <Stack.Screen name="(tabs)/login" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)/dashboard" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)/transactions" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)/earn" options={{ headerShown: false }} /> {/* Add Earn screen */}
+        <Stack.Screen name="(tabs)/earn" options={{ headerShown: false }} /> 
+        <Stack.Screen name="(tabs)/pay" options={{ headerShown: false }} /> 
+        <Stack.Screen name="(tabs)/settings" options={{ headerShown: false }} /> 
         <Stack.Screen name="+not-found" />
       </Stack>
     </SafeAreaView>
