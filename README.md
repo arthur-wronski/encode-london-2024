@@ -2,7 +2,7 @@
 
 A full-stack decentralized application built with Expo (React Native), Supabase, and Stellar blockchain. This project allows users without traditional banking access to interact with blockchain services using Mobile Money.
 
-Users can easily stake their funds in XLM and start earning, all without needing a bank account. Looking ahead, the platform will enable users to explore a wide range of decentralized apps (dApps) and DeFi opportunities, unlocking everything from lending and borrowing to token swaps—all through a simple, mobile-first experience. This app bridges the gap between traditional finance and the future of decentralized finance, empowering users to take control of their financial futures.
+Users can seamlessly stake their money in XLM without needing to hold or manage crypto assets themselves. With just a few taps, they can start earning rewards while we handle all the complex blockchain interactions in the background. Designed to bring Web3 to everyday Web2 users, this app is the bridge that makes decentralized finance (DeFi) accessible to anyone, even without prior crypto experience. Future updates will unlock a full suite of dApps and DeFi services, all through a simple, mobile-first interface—empowering users to stake, lend, borrow, and more directly from their mobile phones.
 
 ## 🌟 Features
 
