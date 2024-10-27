@@ -59,9 +59,9 @@ export default function Dashboard() {
         {/* Balance Card */}
         <View style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>Balance</Text>
-          <Text style={styles.balance}>$120.50</Text>
+          <Text style={styles.balance}>$120</Text>
           <Text style={styles.subBalance}>Mobile Money: $100</Text>
-          <Text style={styles.subBalance}>Earn: $20.50 (200 XLM)</Text>
+          <Text style={styles.subBalance}>Earn: $20 (200 XLM)</Text>
         </View>
 
         {/* Actions */}
