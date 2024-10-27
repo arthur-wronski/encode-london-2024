@@ -18,10 +18,10 @@ app.use(cors({
 app.use(express.json());
 
 const MOBILE_MONEY_API = {
-  BASE_URL: 'https://api.mobilemoneyapi.io/v1',
-  CONSUMER_KEY: '2c108fhgdqmphhuk0lohr07dqv',
-  CONSUMER_SECRET: 'm33ue3o3jfoh539fmuceduetj73k2j7m35rg239q7n64nhr3b1o',
-  API_KEY: 'aSFvTaqes75C9A0mjIBPJ65ABPmXBN378ZGLCKdy'
+  BASE_URL: process.env.BASE_URL,
+  CONSUMER_KEY: process.env.CONSUMER_KEY,
+  CONSUMER_SECRET: process.env.CONSUMER_SECRET,
+  API_KEY: process.env.API_KEY
 };
 
 // Mobile Money Link endpoint
